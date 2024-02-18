@@ -2,6 +2,7 @@ import json
 from datetime import datetime
 
 
+
 def save_in_json(var, file_dir):
     with open(file_dir, 'w') as file:
         json.dump(var, file)
@@ -38,3 +39,8 @@ def load_from_file(file_path="watering_history.txt"):
     except FileNotFoundError:
         err = f"Файл {file_path} не найден"
         return err
+
+
+def get_date():
+    date = datetime.now().strftime('%Y-%m-%d')
+    return date

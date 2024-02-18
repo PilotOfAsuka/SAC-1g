@@ -1,14 +1,14 @@
 from func import days_since_last_watering
 
 
-BOT_TOKEN = "6540946269:AAFS9VxfD93UHtPHpFs5oNmENN34OCvNjzQ"
+BOT_TOKEN = "6901244838:AAH-UQ20wD719cFHfOFqR2_Wn2sdc5mIDUY"
 
-current_temp = 20
-air_hud = 35
-dirt_hud = 45
-days = 10
+current_temp = "Датчика нет"
+air_hud = "Датчика нет"
+dirt_hud = "Датчика нет"
+days = days_since_last_watering("2024-02-15")
 
-
+variables_file = "variables.json"
 user_states_file = 'user_states.json'
 
 start_text = ("🌿 Добро пожаловать в 'Систему автоматического контроля гровбоксом' САК-1г 🌿"

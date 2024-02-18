@@ -5,8 +5,30 @@ from aiogram.types import (Message, CallbackQuery)
 from aiogram.filters import Command
 from menu import *
 
-water_value = 0
-day_value = 0
+
+def watering():
+    date = func.get_date()
+    variables["dates"] = date
+    func.save_in_json(variables, 'variables.json')
+
+
+def save_var(var, value):
+    variables[var] = value
+    func.save_in_json(variables, 'variables.json')
+
+# Загрузка данных из файла
+try:
+    with open('variables.json', 'r') as file_var:
+        variables = json.load(file_var)
+        print(f"variables.json - loading successful")
+except FileNotFoundError:
+    # Если файл не найден, начинаем с пустого словаря
+    variables = {'dates': "2024-01-20", 'light_on': False, 'wing_on': False, 'day_value': 0, 'water_value': 0}
+    print(f"{cfg.user_states_file} not found, we make a new :)")
+
+
+day_value_chache = 0
+water_value_chache = 0
 
 
 @dp.message(Command("start"))
@@ -14,7 +36,7 @@ async def start_handler(msg: Message):
     # user_id = str(msg.from_user.id)
     # Отправляем приветственное сообщение
     await msg.answer(cfg.start_text, reply_markup=main_menu_1)
-    await msg.answer(cfg.update_info(dates.get("last_day"), light_on, wing_on, day_value), reply_markup=info_menu)
+    await msg.answer(cfg.update_info(variables['dates'], variables['light_on'], variables['wing_on'], variables['day_value']), reply_markup=info_menu)
     await msg.delete()
     set_user_state(msg, "idle")
 
@@ -39,7 +61,7 @@ def create_menu_handler(menu_list, menu_actions):
 @dp.message(lambda message: message.text in main_menu_list)
 async def main_menu(msg: Message):
     if msg.text == main_menu_list[4]:
-        await msg.answer(cfg.update_info(dates.get("last_day"), light_on, wing_on, day_value), reply_markup=info_menu)
+        await msg.answer(cfg.update_info(variables['dates'], variables['light_on'], variables['wing_on'], variables['day_value']), reply_markup=info_menu)
     else:
         await handle_menu(msg, main_menu_actions)
 
@@ -52,16 +74,15 @@ async def get_history(msg: Message):
 
 @dp.message(lambda message: message.text in light_set_menu_list)  # Включение света
 async def menu(msg: Message):
-    global light_on
     user_id = str(msg.from_user.id)
     if user_states.get(user_id) == "light_set":
         if msg.text == light_set_menu_list[0]:
-            if light_on is True:
-                light_on = False
+            if variables.get('light_on') is True:
+                save_var('light_on', False)
                 set_user_state(msg, "idle")
                 await msg.answer('💡Лампа была выключена, возвращаем вас в главное меню:', reply_markup=main_menu_1)
             else:
-                light_on = True
+                save_var('light_on', True)
                 set_user_state(msg, "idle")
                 await msg.answer('💡Лампа была включена, возвращаем вас в главное меню:', reply_markup=main_menu_1)
     pass
@@ -69,16 +90,15 @@ async def menu(msg: Message):
 
 @dp.message(lambda message: message.text in wing_menu_list)  # Включение обдува
 async def menu(msg: Message):
-    global wing_on
     user_id = str(msg.from_user.id)
     if user_states.get(user_id) == "wing":
         if msg.text == wing_menu_list[0]:
-            if wing_on is True:
-                wing_on = False
+            if variables.get('wing_on') is True:
+                save_var("wing_on", False)
                 set_user_state(msg, "idle")
                 await msg.answer('💨 Обдув был выключен, возвращаем вас в главное меню 💨', reply_markup=main_menu_1)
             else:
-                wing_on = True
+                save_var("wing_on", True)
                 set_user_state(msg, "idle")
                 await msg.answer('💨 Обдув был включен, возвращаем вас в главное меню 💨', reply_markup=main_menu_1)
     pass
@@ -87,7 +107,7 @@ async def menu(msg: Message):
 # Кнопка обновить
 @dp.callback_query(F.data == user_button_list[0])
 async def send_random_value(callback: CallbackQuery):
-    await callback.message.answer(cfg.update_info(dates.get("last_day"), light_on, wing_on, day_value), reply_markup=info_menu)
+    await callback.message.answer(cfg.update_info(variables['dates'], variables['light_on'], variables['wing_on'], variables['day_value']), reply_markup=info_menu)
 
 
 # Ивенты да и нет
@@ -98,13 +118,16 @@ async def water_set_menu(msg: Message):
         if msg.text == check_buttons_list[0]:
             await msg.answer("🌧️ Успешно совершен полив! 🌧️\nВозвращаем вас в главное меню.", reply_markup=main_menu_1)
             watering()
-            func.write_to_file(water_value)
+            save_var("water_value", water_value_chache)
+            func.write_to_file(variables['water_value'])
             set_user_state(msg, "idle")
+
         elif msg.text == check_buttons_list[1]:
             await msg.answer("❌ Вы отказались! ❌\nВозвращаем вас в главное меню", reply_markup=main_menu_1)
             set_user_state(msg, "idle")
     elif user_states.get(user_id) == "light_set_day":
         if msg.text == check_buttons_list[0]:
+            save_var("day_value", day_value_chache)
             await msg.answer("💡 Успешно установлен интервал работы лампы! 💡\nВозвращаем вас в главное меню.", reply_markup=main_menu_1)
             set_user_state(msg, "idle")
         elif msg.text == check_buttons_list[1]:
@@ -143,22 +166,22 @@ async def back(msg: Message):
 # обработка текстовой информации
 @dp.message()
 async def message_handler(msg: Message):
-    global water_value
-    global day_value
+    global water_value_chache
+    global day_value_chache
     # user_name = msg.from_user.username
     user_id = str(msg.from_user.id)
     if msg.text is not None:
         if user_states.get(user_id) == "water_set_w":
             try:
-                water_value = int(msg.text)
-                await msg.answer(f"🌧️ Вы хотите совершить полив на {water_value} литров 🌧️", reply_markup=check_menu)
+                water_value_chache = int(msg.text)
+                await msg.answer(f"🌧️ Вы хотите совершить полив на {water_value_chache} литров 🌧️", reply_markup=check_menu)
             except ValueError:
                 await msg.answer("❌ Это не число, повторите еще раз ❌")
             pass
         elif user_states.get(user_id) == "light_set_day":
             try:
-                day_value = int(msg.text)
-                await msg.answer(f"🌧️ Вы хотите установить день на {day_value} часов️", reply_markup=check_menu)
+                day_value_chache = int(msg.text)
+                await msg.answer(f"🌧️ Вы хотите установить день на {day_value_chache} часов️", reply_markup=check_menu)
             except ValueError:
                 await msg.answer("❌ Это не число, повторите еще раз ❌")
 

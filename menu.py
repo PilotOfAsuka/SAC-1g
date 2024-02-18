@@ -3,7 +3,6 @@ from aiogram.types import (ReplyKeyboardMarkup,
 import config as cfg
 import json
 import func
-from datetime import datetime
 
 # Загрузка данных из файла
 try:
@@ -44,17 +43,6 @@ def menu_generator(button_list, back_b=False):
         buttons.append([back_button])
     menu = ReplyKeyboardMarkup(resize_keyboard=True, keyboard=buttons)
     return menu
-
-
-dates = {"last_day": "2024-01-20"}
-light_on = False
-wing_on = False
-
-
-def watering():
-    global dates
-    date = datetime.now().strftime('%Y-%m-%d')
-    dates["last_day"] = date
 
 
 # Списки кнопок

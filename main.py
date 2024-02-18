@@ -1,7 +1,7 @@
+import func
 import misc
 import handlers
 import asyncio
-
 
 
 async def main():
@@ -10,7 +10,6 @@ async def main():
 
 
 if __name__ == "__main__":
-
     loop = asyncio.get_event_loop()
 
     try:
