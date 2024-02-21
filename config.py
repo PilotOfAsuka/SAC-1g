@@ -3,10 +3,11 @@ from func import days_since_last_watering
 
 BOT_TOKEN = "6901244838:AAH-UQ20wD719cFHfOFqR2_Wn2sdc5mIDUY"
 
-current_temp = "Датчика нет"
-air_hud = "Датчика нет"
-dirt_hud = "Датчика нет"
+current_temp = "Датчика нет 🛑"
+air_hud = "Датчика нет 🛑"
+dirt_hud = "Датчика нет 🛑"
 days = days_since_last_watering("2024-02-15")
+name_sort = "Название потом скинь"
 
 variables_file = "variables.json"
 user_states_file = 'user_states.json'
@@ -17,12 +18,14 @@ start_text = ("🌿 Добро пожаловать в 'Систему авто�
               "\n🌱 Ну и удобный контроль 🌱")
 
 
-def update_info(day_w, light, wing, light_d, c_t=current_temp, air_h=air_hud, dirt_h=dirt_hud, days_life=days):
+def update_info(day_w, light, wing, light_d, c_t=current_temp, air_h=air_hud, dirt_h=dirt_hud):
 
     days_w = days_since_last_watering(day_w)
     light_n = 24 - light_d
 
-    info_text =(f"🌡️ Текущая температура: {c_t}°C"
+    info_text =(f"\n 🏷 Название сорта: {name_sort} "
+                f"\n"
+                f"\n🌡️ Текущая температура: {c_t}°C"
                 f"\n"
                 f"\n💧 Влажность воздуха: {air_h}%"
                 f"\n"
@@ -36,6 +39,8 @@ def update_info(day_w, light, wing, light_d, c_t=current_temp, air_h=air_hud, di
                 f"\n"
                 f"\n💨 Обдув: {'Включено' if wing else 'Выключено'}"
                 f"\n"
-                f"\n🌱 Дней роста: {days_life}"
+                f"\n 📅 Дата посева: '2024-02-15'"
+                f"\n"
+                f"\n🌱 Дней роста: {days_since_last_watering('2024-02-15')}"
                 f"\n")
     return info_text
