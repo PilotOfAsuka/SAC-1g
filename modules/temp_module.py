@@ -1,5 +1,15 @@
 from bluepy.btle import Peripheral, DefaultDelegate, BTLEDisconnectError
+import subprocess
 
+import misc
+
+
+def restart_bluetooth_service():
+    try:
+        subprocess.run(['sudo', 'systemctl', 'restart', 'bluetooth'], check=True)
+        misc.bot.send_message(chat_id=5848061277, text="True")
+    except subprocess.CalledProcessError as e:
+        misc.bot.send_message(chat_id=5848061277, text="false")
 
 class NotificationDelegate(DefaultDelegate):
     def __init__(self):
@@ -34,6 +44,7 @@ def get_sensor_data(timeout=10.0):
         temperature = "🛑"
         humidity = "🛑"
         battery_level = "🛑"
+        restart_bluetooth_service()
         return temperature, humidity, battery_level
 
     finally:
