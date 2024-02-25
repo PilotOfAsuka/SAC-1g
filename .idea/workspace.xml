@@ -5,14 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e9ea7f0b-4819-4fca-bc5b-53000563e1bb" name="Changes" comment="version1">
-      <change afterPath="$PROJECT_DIR$/BOX.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/func.py" beforeDir="false" afterPath="$PROJECT_DIR$/func.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/handlers.py" beforeDir="false" afterPath="$PROJECT_DIR$/handlers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/menu.py" beforeDir="false" afterPath="$PROJECT_DIR$/menu.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user_states.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/variables.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/variables.json" beforeDir="false" afterPath="$PROJECT_DIR$/variables.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/watering_history.txt" beforeDir="false" afterPath="$PROJECT_DIR$/watering_history.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

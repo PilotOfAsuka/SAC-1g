@@ -1,5 +1,6 @@
 from aiogram import F
 
+import misc
 from misc import dp
 from aiogram.types import (Message, CallbackQuery)
 from aiogram.filters import Command
@@ -30,6 +31,12 @@ except FileNotFoundError:
 
 day_value_chache = 0
 water_value_chache = 0
+
+
+@dp.message(Command("id"))
+async def get_chat_id(msg: Message):
+    chat_id = str(msg.chat.id)
+    await msg.answer("ИД данного чата: " + chat_id)
 
 
 @dp.message(Command("start"))
@@ -146,6 +153,8 @@ async def water_set_menu(msg: Message):
     if user_states.get(user_id) == "water_set_w":
         if msg.text == check_buttons_list[0]:
             await msg.answer("🌧️ Успешно совершен полив! 🌧️\nВозвращаем вас в главное меню.", reply_markup=main_menu_1)
+            await misc.bot.send_message(chat_id=5848061277,
+                                        text=f"Совершен полив на {water_value_chache} литра")  # уведомление в ЛС
             watering()
             save_var("water_value", water_value_chache)
             func.write_to_file(variables['water_value'])
