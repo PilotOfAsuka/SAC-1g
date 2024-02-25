@@ -1,17 +1,13 @@
 from bluepy.btle import Peripheral, DefaultDelegate, BTLEDisconnectError
 import subprocess
 
-import misc
-
-async def notify(chatid, text):
-    await misc.bot.send_message(chat_id=chatid, text=text)
 
 def restart_bluetooth_service():
     try:
         subprocess.run(['sudo', 'systemctl', 'restart', 'bluetooth'], check=True)
-        notify(5848061277, "Перезапуск блютуз")
     except subprocess.CalledProcessError as e:
-        notify(5848061277, "Не перезапуск")
+        pass
+
 
 class NotificationDelegate(DefaultDelegate):
     def __init__(self):
@@ -20,11 +16,10 @@ class NotificationDelegate(DefaultDelegate):
         self.humidity = 0
         self.battery_level = 0
 
-
     def handleNotification(self, cHandle, data):
-        self.temperature = str(int.from_bytes(data[:2], byteorder='little', signed=False) / 100.0)
-        self.humidity = str(data[2])
-        self.battery_level = str(int.from_bytes(data[3:], byteorder='little', signed=False))
+        self.temperature = int.from_bytes(data[:2], byteorder='little', signed=False) / 100.0
+        self.humidity = data[2]
+        self.battery_level = int.from_bytes(data[3:], byteorder='little', signed=False) / 1000
 
 
 device_address = "A4:C1:38:95:D6:32"

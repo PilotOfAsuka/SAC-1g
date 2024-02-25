@@ -3,6 +3,7 @@ from modules.temp_module import get_sensor_data
 
 
 BOT_TOKEN = "6901244838:AAH-UQ20wD719cFHfOFqR2_Wn2sdc5mIDUY"
+# char-write-req 0x0038 0100 для включения нотификации
 
 
 name_sort = "BUBBA KUSH"
@@ -27,11 +28,11 @@ def update_info(day_w, light, wing, light_day, termo):
 
     info_text =(f"\n 🏷 Название сорта: {name_sort}"
                 f"\n"
-                f"\n🌡️ Текущая температура: {current_temp}°C"
+                f"\n🌡️ Текущая температура: {current_temp:.1f}°C"
                 f"\n"
                 f"\n💧 Влажность воздуха: {air_hud}%"
                 f"\n"
-                f"\n🔋 Батарейка: {voltage}V"
+                f"\n🔋 Батарейка: {voltage:.1f}V"
                 f"\n"
                 f"\n🔥 Обогрев: {'Включен' if termo else 'Выключен'}"
                 f"\n"
