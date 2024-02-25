@@ -23,7 +23,9 @@ notification_delegate = NotificationDelegate()
 def get_sensor_data(timeout=10.0):
     device = None
     try:
-        device = Peripheral(device_address)
+        device = Peripheral()
+        if device.addrType == None:
+            device.connect(device_address)
         device.setDelegate(notification_delegate)
         if device.waitForNotifications(timeout):
             return notification_delegate.temperature, notification_delegate.humidity, notification_delegate.battery_level
