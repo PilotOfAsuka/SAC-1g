@@ -3,15 +3,15 @@ import subprocess
 
 import misc
 
+async def notify(chatid, text):
+    await misc.bot.send_message(chat_id=chatid, text=text)
 
 def restart_bluetooth_service():
     try:
         subprocess.run(['sudo', 'systemctl', 'restart', 'bluetooth'], check=True)
-        misc.bot.send_message(chat_id=5848061277, text="Restarted")
-        print("Bluetooth restarted")
+        notify(5848061277, "Перезапуск блютуз")
     except subprocess.CalledProcessError as e:
-        print("not restarted")
-        misc.bot.send_message(chat_id=5848061277, text="BLUETHOTH ERROR")
+        notify(5848061277, "Не перезапуск")
 
 class NotificationDelegate(DefaultDelegate):
     def __init__(self):
