@@ -1,11 +1,10 @@
 from func import days_since_last_watering
+from modules.temp_module import get_sensor_data
 
 
 BOT_TOKEN = "6901244838:AAH-UQ20wD719cFHfOFqR2_Wn2sdc5mIDUY"
 
-current_temp = "🛑"
-air_hud = "🛑"
-dirt_hud = "🛑"
+
 name_sort = "BUBBA KUSH"
 date_of_seed = '2024-02-14'
 
@@ -19,18 +18,20 @@ start_text = ("🌿 Добро пожаловать в 'Систему авто�
               "\n🌱 Ну и удобный контроль 🌱")
 
 
-def update_info(day_w, light, wing, light_day, termo, c_t=current_temp, air_h=air_hud, dirt_h=dirt_hud):
+def update_info(day_w, light, wing, light_day, termo):
+
+    current_temp, air_hud, voltage = get_sensor_data()
 
     days_w = days_since_last_watering(day_w)
     light_night = 24 - light_day
 
-    info_text =(f"\n 🏷 Название сорта: {name_sort} "
+    info_text =(f"\n 🏷 Название сорта: {name_sort}"
                 f"\n"
-                f"\n🌡️ Текущая температура: {c_t}°C"
+                f"\n🌡️ Текущая температура: {current_temp}°C"
                 f"\n"
-                f"\n💧 Влажность воздуха: {air_h}%"
+                f"\n💧 Влажность воздуха: {air_hud}%"
                 f"\n"
-                f"\n💦 Влажность почвы: {dirt_h}%"
+                f"\n🔋 Батарейка: {voltage}V"
                 f"\n"
                 f"\n🔥 Обогрев: {'Включен' if termo else 'Выключен'}"
                 f"\n"
