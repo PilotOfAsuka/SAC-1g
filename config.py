@@ -1,5 +1,5 @@
 from func import days_since_last_watering
-from modules.temp_module import get_sensor_data
+# from modules.temp_module import get_sensor_data
 
 
 BOT_TOKEN = "6901244838:AAH-UQ20wD719cFHfOFqR2_Wn2sdc5mIDUY"

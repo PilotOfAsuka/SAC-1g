@@ -6,6 +6,8 @@ from aiogram.types import (Message, CallbackQuery)
 from aiogram.filters import Command
 from menu import *
 
+from modules import admin_panael
+
 
 def watering():
     date = func.get_date()
@@ -38,8 +40,14 @@ async def get_chat_id(msg: Message):
     chat_id = str(msg.chat.id)
     await msg.answer("ИД данного чата: " + chat_id)
 
+@dp.message(Command("my_id"))
+async def get_user_id(msg: Message):
+    user_id = str(msg.from_user.id)
+    await msg.answer("Твой ID: " + user_id)
+
 
 @dp.message(Command("start"))
+@admin_panael.check_admins
 async def start_handler(msg: Message):
     # user_id = str(msg.from_user.id)
     # Отправляем приветственное сообщение
@@ -65,12 +73,14 @@ async def handle_menu(msg, menu_actions):
 
 def create_menu_handler(menu_list, menu_actions):
     @dp.message(lambda message: message.text in menu_list)
+    @admin_panael.check_admins
     async def create_menu(msg: Message):
         await handle_menu(msg, menu_actions)
 
 
 # Ивенты Маин меню
 @dp.message(lambda message: message.text in main_menu_list)
+@admin_panael.check_admins
 async def main_menu(msg: Message):
     if msg.text == main_menu_list[4]:
         await msg.answer(cfg.update_info(variables['dates'],
@@ -84,11 +94,13 @@ async def main_menu(msg: Message):
 
 # История поливов
 @dp.message(lambda message: message.text == water_menu_list[2])
+@admin_panael.check_admins
 async def get_history(msg: Message):
     await msg.answer(func.load_from_file())
 
 
 @dp.message(lambda message: message.text in light_set_menu_list)  # Включение света
+@admin_panael.check_admins
 async def light_on_menu(msg: Message):
     user_id = str(msg.from_user.id)
     if user_states.get(user_id) == "light_set":
@@ -105,6 +117,7 @@ async def light_on_menu(msg: Message):
 
 
 @dp.message(lambda message: message.text in wing_menu_list)  # Включение обдува
+@admin_panael.check_admins
 async def wing_on_menu(msg: Message):
     user_id = str(msg.from_user.id)
     if user_states.get(user_id) == "wing":
@@ -121,6 +134,7 @@ async def wing_on_menu(msg: Message):
 
 
 @dp.message(lambda message: message.text in temp_menu_list)  # Включение обогрева
+@admin_panael.check_admins
 async def termo_on_menu(msg: Message):
     user_id = str(msg.from_user.id)
     if user_states.get(user_id) == "temp":
@@ -138,6 +152,7 @@ async def termo_on_menu(msg: Message):
 
 # Кнопка обновить
 @dp.callback_query(F.data == user_button_list[0])
+@admin_panael.check_admins
 async def send_random_value(callback: CallbackQuery):
     await callback.message.answer(cfg.update_info(variables['dates'],
                                                   variables['light_on'],
@@ -148,6 +163,7 @@ async def send_random_value(callback: CallbackQuery):
 
 # Ивенты да и нет
 @dp.message(lambda message: message.text in check_buttons_list)
+@admin_panael.check_admins
 async def water_set_menu(msg: Message):
     user_id = str(msg.from_user.id)
     if user_states.get(user_id) == "water_set_w":
@@ -186,6 +202,7 @@ create_menu_handler(light_menu_list, light_menu_actions)
 
 # Ивенты кнопки назад
 @dp.message(lambda message: message.text == "Назад")
+@admin_panael.check_admins
 async def back(msg: Message):
     user_id = str(msg.from_user.id)
     if user_states.get(user_id) in ["light", "water", "wing", "temp"]:
@@ -206,6 +223,7 @@ async def back(msg: Message):
 
 # обработка текстовой информации
 @dp.message()
+@admin_panael.check_admins
 async def message_handler(msg: Message):
     global water_value_chache
     global day_value_chache
