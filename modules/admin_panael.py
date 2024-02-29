@@ -3,7 +3,9 @@ from functools import wraps
 
 
 admins = [
-    5848061277,
+    5848061277,  # Илья
+    5611067209,  # Макс
+
 ]
 
 
