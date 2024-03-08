@@ -3,10 +3,11 @@ from modules.temp_module import get_sensor_data
 
 
 BOT_TOKEN = "6901244838:AAH-UQ20wD719cFHfOFqR2_Wn2sdc5mIDUY"
-# char-write-req 0x0038 0100 для включения нотификации
 
 
-name_sort = "BUBBA KUSH"
+
+name_of_sort = "BUBBA KUSH"
+name_of_udobrenie = "None"
 date_of_seed = '2024-02-14'
 
 
@@ -26,13 +27,11 @@ def update_info(day_w, light, wing, light_day, termo):
     days_w = days_since_last_watering(day_w)
     light_night = 24 - light_day
 
-    info_text =(f"\n 🏷 Название сорта: {name_sort}"
+    info_text =(f"\n🏷 Название сорта: {name_of_sort}"
                 f"\n"
                 f"\n🌡️ Текущая температура: {current_temp}°C"
                 f"\n"
                 f"\n💧 Влажность воздуха: {air_hud}%"
-                f"\n"
-                f"\n🔋 Батарейка: {voltage}V"
                 f"\n"
                 f"\n🔥 Обогрев: {'Включен' if termo else 'Выключен'}"
                 f"\n"
@@ -45,6 +44,8 @@ def update_info(day_w, light, wing, light_day, termo):
                 f"\n📅 Дата посева: {date_of_seed}"
                 f"\n"
                 f"\n🌱 Дней роста: {days_since_last_watering('2024-02-15')}"
+                f"\n"
+                f"\n🏷 Название удобрения: {name_of_udobrenie}"
                 f"\n"
                 f"\n💧 Дней с последнего полива: {days_w}")
     return info_text

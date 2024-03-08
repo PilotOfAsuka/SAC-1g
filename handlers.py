@@ -40,6 +40,7 @@ async def get_chat_id(msg: Message):
     chat_id = str(msg.chat.id)
     await msg.answer("ИД данного чата: " + chat_id)
 
+
 @dp.message(Command("my_id"))
 async def get_user_id(msg: Message):
     user_id = str(msg.from_user.id)

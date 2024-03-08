@@ -1,6 +1,9 @@
 from bluepy.btle import Peripheral, DefaultDelegate, BTLEDisconnectError
 import subprocess
 
+# Данный файл-модуль является костылем для получения данных с датчика Xiaomi Mijia (LYWSD03MMC)
+# char-write-req 0x0038 0100 для включения нотификации
+# В будущем переход на более надежный DHT22
 
 def restart_bluetooth_service():
     try:
@@ -49,9 +52,8 @@ def get_sensor_data(timeout=10.0):
             device.disconnect()
 
 
-#  temperature, humidity, battery_level = get_sensor_data()
-
 '''
+temperature, humidity, battery_level = get_sensor_data()
 print(f"Temperature: {temperature} 'C")
 print(f"Humidity: {humidity} %")
 print(f"Battery Level: {battery_level} m.volt")
