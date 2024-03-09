@@ -250,7 +250,7 @@ async def message_handler(msg: Message):
 
         elif user_states.get(user_id) == "water_set_udr":
             try:
-                udr_value_chache = int(msg.text)
+                udr_value_chache = float(msg.text)
                 await msg.answer(f"Вы хотите добавить удобрение на {udr_value_chache} литров",
                                  reply_markup=check_menu)
             except ValueError:
