@@ -1,38 +1,17 @@
 from aiogram import F
 
-import misc
-from misc import dp
+from misc import dp, bot
 from aiogram.types import (Message, CallbackQuery)
 from aiogram.filters import Command
 from menu import *
 
-from modules import admin_panael
+from modules import admin_panael, var_config
 
-
-def watering():
-    date = func.get_date()
-    variables["dates"] = date
-    func.save_in_json(variables, 'variables.json')
-
-
-def save_var(var, value):
-    variables[var] = value
-    func.save_in_json(variables, 'variables.json')
-
-
-# Загрузка данных из файла
-try:
-    with open('variables.json', 'r') as file_var:
-        variables = json.load(file_var)
-        print(f"variables.json - loading successful")
-except FileNotFoundError:
-    # Если файл не найден, начинаем с пустого словаря
-    variables = {'dates': "2024-02-17", 'light_on': False, 'wing_on': False, 'sun_value': 0, 'water_value': 0, 'termo_on': False}
-    print(f"variables.json not found, we make a new :)")
-
-
+udr_value_chache = 0
 day_value_chache = 0
 water_value_chache = 0
+sort_name = None
+udr_name = None
 
 
 @dp.message(Command("id"))
@@ -54,11 +33,7 @@ async def start_handler(msg: Message):
     # Отправляем приветственное сообщение
     await msg.delete()
     await msg.answer(cfg.start_text, reply_markup=main_menu_1)
-    await msg.answer(cfg.update_info(variables['dates'],
-                                     variables['light_on'],
-                                     variables['wing_on'],
-                                     variables['sun_value'],
-                                     variables['termo_on']), reply_markup=info_menu)
+    await msg.answer(cfg.update_info(), reply_markup=info_menu)
     set_user_state(msg, "idle")
 
 
@@ -83,18 +58,14 @@ def create_menu_handler(menu_list, menu_actions):
 @dp.message(lambda message: message.text in main_menu_list)
 @admin_panael.check_admins
 async def main_menu(msg: Message):
-    if msg.text == main_menu_list[4]:
-        await msg.answer(cfg.update_info(variables['dates'],
-                                         variables['light_on'],
-                                         variables['wing_on'],
-                                         variables['sun_value'],
-                                         variables['termo_on']), reply_markup=info_menu)
-    else:
+    if msg.text != main_menu_list[4]:
         await handle_menu(msg, main_menu_actions)
+    else:
+        await msg.answer(cfg.update_info(), reply_markup=info_menu)
 
 
 # История поливов
-@dp.message(lambda message: message.text == water_menu_list[2])
+@dp.message(lambda message: message.text == water_menu_list[3])
 @admin_panael.check_admins
 async def get_history(msg: Message):
     await msg.answer(func.load_from_file())
@@ -106,12 +77,12 @@ async def light_on_menu(msg: Message):
     user_id = str(msg.from_user.id)
     if user_states.get(user_id) == "light_set":
         if msg.text == light_set_menu_list[0]:
-            if variables.get('light_on') is True:
-                save_var('light_on', False)
+            if cfg.variables.get('light_on') is True:
+                var_config.save_var(variables=cfg.variables, var='light_on', value=False)
                 set_user_state(msg, "idle")
                 await msg.answer('💡Лампа была выключена, возвращаем вас в главное меню:', reply_markup=main_menu_1)
             else:
-                save_var('light_on', True)
+                var_config.save_var(variables=cfg.variables, var='light_on', value=True)
                 set_user_state(msg, "idle")
                 await msg.answer('💡Лампа была включена, возвращаем вас в главное меню:', reply_markup=main_menu_1)
     pass
@@ -123,12 +94,12 @@ async def wing_on_menu(msg: Message):
     user_id = str(msg.from_user.id)
     if user_states.get(user_id) == "wing":
         if msg.text == wing_menu_list[0]:
-            if variables.get('wing_on') is True:
-                save_var("wing_on", False)
+            if cfg.variables.get('wing_on') is True:
+                var_config.save_var(variables=cfg.variables, var="wing_on", value=False)
                 set_user_state(msg, "idle")
                 await msg.answer('💨 Обдув был выключен, возвращаем вас в главное меню 💨', reply_markup=main_menu_1)
             else:
-                save_var("wing_on", True)
+                var_config.save_var(variables=cfg.variables, var="wing_on", value=True)
                 set_user_state(msg, "idle")
                 await msg.answer('💨 Обдув был включен, возвращаем вас в главное меню 💨', reply_markup=main_menu_1)
     pass
@@ -140,12 +111,12 @@ async def termo_on_menu(msg: Message):
     user_id = str(msg.from_user.id)
     if user_states.get(user_id) == "temp":
         if msg.text == temp_menu_list[0]:
-            if variables.get('termo_on') is True:
-                save_var("termo_on", False)
+            if cfg.variables.get('termo_on') is True:
+                var_config.save_var(variables=cfg.variables, var="termo_on", value=False)
                 set_user_state(msg, "idle")
                 await msg.answer('🔥 Обогрев был выключен, возвращаем вас в главное меню 🔥', reply_markup=main_menu_1)
             else:
-                save_var("termo_on", True)
+                var_config.save_var(variables=cfg.variables, var="termo_on", value=True)
                 set_user_state(msg, "idle")
                 await msg.answer('🔥 Обогрев был включен, возвращаем вас в главное меню 🔥', reply_markup=main_menu_1)
     pass
@@ -154,12 +125,8 @@ async def termo_on_menu(msg: Message):
 # Кнопка обновить
 @dp.callback_query(F.data == user_button_list[0])
 @admin_panael.check_admins
-async def send_random_value(callback: CallbackQuery):
-    await callback.message.answer(cfg.update_info(variables['dates'],
-                                                  variables['light_on'],
-                                                  variables['wing_on'],
-                                                  variables['sun_value'],
-                                                  variables['termo_on']), reply_markup=info_menu)
+async def send_update_value(callback: CallbackQuery):
+    await callback.message.answer(cfg.update_info(), reply_markup=info_menu)
 
 
 # Ивенты да и нет
@@ -170,56 +137,94 @@ async def water_set_menu(msg: Message):
     if user_states.get(user_id) == "water_set_w":
         if msg.text == check_buttons_list[0]:
             await msg.answer("🌧️ Успешно совершен полив! 🌧️\nВозвращаем вас в главное меню.", reply_markup=main_menu_1)
-            await misc.bot.send_message(chat_id=5848061277,
-                                        text=f"Совершен полив на {water_value_chache} литра")  # уведомление в ЛС
-            watering()
-            save_var("water_value", water_value_chache)
-            func.write_to_file(variables['water_value'])
+            await bot.send_message(chat_id=5848061277,
+                                   text=f"Совершен полив на {water_value_chache} литра")  # Уведомление в ЛС
+            var_config.save_var(variables=cfg.variables, var="dates", value=func.get_date())
+            var_config.save_var(variables=cfg.variables, var="water_value", value=water_value_chache)
+            func.write_to_file(cfg.variables['water_value'])
             set_user_state(msg, "idle")
 
         elif msg.text == check_buttons_list[1]:
             await msg.answer("❌ Вы отказались! ❌\nВозвращаем вас в главное меню",
                              reply_markup=main_menu_1)
+            set_user_state(msg, "idle")
 
+    elif user_states.get(user_id) == "water_set_udr":
+        if msg.text == check_buttons_list[0]:
+            await msg.answer("Успешно добавлено удобрение️\nВозвращаем вас в главное меню.", reply_markup=main_menu_1)
+            var_config.save_var(variables=cfg.variables, var="udr_value", value=udr_value_chache)
+            func.write_to_file(cfg.variables['udr_value'], udobrenie=True)
+            set_user_state(msg, "idle")
+
+        elif msg.text == check_buttons_list[1]:
+            await msg.answer("❌ Вы отказались! ❌\nВозвращаем вас в главное меню",
+                             reply_markup=main_menu_1)
             set_user_state(msg, "idle")
     elif user_states.get(user_id) == "light_set_day":
         if msg.text == check_buttons_list[0]:
-            save_var("sun_value", day_value_chache)
+            var_config.save_var(variables=cfg.variables, var="sun_value", value=day_value_chache)
             await msg.answer("💡 Успешно установлен интервал работы лампы! 💡\nВозвращаем вас в главное меню.",
                              reply_markup=main_menu_1)
+            set_user_state(msg, "idle")
 
+        elif msg.text == check_buttons_list[1]:
+            await msg.answer("❌ Вы отказались! ❌\nВозвращаем вас в главное меню", reply_markup=main_menu_1)
+            set_user_state(msg, "idle")
+
+    elif user_states.get(user_id) == "name_set":
+        if msg.text == check_buttons_list[0]:
+            var_config.save_var(variables=cfg.variables, var="name", value=sort_name)
+            await msg.answer("💡 Успешно установлено новое название! 💡\nВозвращаем вас в главное меню.",
+                             reply_markup=main_menu_1)
             set_user_state(msg, "idle")
         elif msg.text == check_buttons_list[1]:
             await msg.answer("❌ Вы отказались! ❌\nВозвращаем вас в главное меню", reply_markup=main_menu_1)
             set_user_state(msg, "idle")
+
+    elif user_states.get(user_id) == "udobr_set":
+        if msg.text == check_buttons_list[0]:
+            var_config.save_var(variables=cfg.variables, var="name_udobr", value=udr_name)
+            await msg.answer("💡 Успешно установлено новое название! 💡\nВозвращаем вас в главное меню.",
+                             reply_markup=main_menu_1)
+            set_user_state(msg, "idle")
+        elif msg.text == check_buttons_list[1]:
+            await msg.answer("❌ Вы отказались! ❌\nВозвращаем вас в главное меню", reply_markup=main_menu_1)
+            set_user_state(msg, "idle")
+
     else:
-        await msg.answer("123")
+        await msg.answer("⚠️ Произошла ошибка в обработке запросов. 🔄\nВозврат в главное меню",
+                         reply_markup=main_menu_1)
 
 
 # Ивенты для различных меню
 create_menu_handler(water_menu_list, water_menu_actions)
 create_menu_handler(light_menu_list, light_menu_actions)
+create_menu_handler(setting_button_list, settings_menu_actions)
 
 
 # Ивенты кнопки назад
-@dp.message(lambda message: message.text == "Назад")
+@dp.message(lambda message: message.text == "🔙 Назад")
 @admin_panael.check_admins
 async def back(msg: Message):
     user_id = str(msg.from_user.id)
-    if user_states.get(user_id) in ["light", "water", "wing", "temp"]:
+    if user_states.get(user_id) in ["light", "water", "wing", "temp", "in_settings"]:
         set_user_state(msg, "idle")
         await msg.answer("🏡 Вы в главном меню 🏡", reply_markup=main_menu_1)
-    elif user_states.get(user_id) in ["water_set", "water_set_w"]:
+
+    elif user_states.get(user_id) in ["water_set", "water_set_w", "water_set_udr"]:
         set_user_state(msg, "water")
         await msg.answer("🌧️ Вы вошли в меню контроля поливом:", reply_markup=in_water_menu)
+
     elif user_states.get(user_id) in ["light_set", "light_set_day"]:
         set_user_state(msg, "light")
         await msg.answer("💡 Вы вошли в меню контроля света:", reply_markup=in_light_menu)
+
     elif user_states.get(user_id) in ["temp_set"]:
         set_user_state(msg, "temp")
         await msg.answer("🔥 Вы вошли в меню контроля обогревом:", reply_markup=in_temp_menu)
+
     else:
-        await msg.answer("Назад пути нет", reply_markup=main_menu_1)
+        await msg.answer("!Возврат в главное меню!", reply_markup=main_menu_1)
 
 
 # обработка текстовой информации
@@ -228,7 +233,10 @@ async def back(msg: Message):
 async def message_handler(msg: Message):
     global water_value_chache
     global day_value_chache
-    # user_name = msg.from_user.username
+    global sort_name
+    global udr_name
+    global udr_value_chache
+
     user_id = str(msg.from_user.id)
     if msg.text is not None:
         if user_states.get(user_id) == "water_set_w":
@@ -236,10 +244,19 @@ async def message_handler(msg: Message):
                 water_value_chache = int(msg.text)
                 await msg.answer(f"🌧️ Вы хотите совершить полив на {water_value_chache} литров 🌧️",
                                  reply_markup=check_menu)
-
             except ValueError:
                 await msg.answer("❌ Это не число, повторите еще раз ❌")
             pass
+
+        elif user_states.get(user_id) == "water_set_udr":
+            try:
+                udr_value_chache = int(msg.text)
+                await msg.answer(f"Вы хотите добавить удобрение на {udr_value_chache} литров",
+                                 reply_markup=check_menu)
+            except ValueError:
+                await msg.answer("❌ Это не число, повторите еще раз ❌")
+            pass
+
         elif user_states.get(user_id) == "light_set_day":
             try:
                 day_value_chache = int(msg.text)
@@ -247,5 +264,20 @@ async def message_handler(msg: Message):
             except ValueError:
                 await msg.answer("❌ Это не число, повторите еще раз ❌")
 
+        elif user_states.get(user_id) == "name_set":
+            sort_name = str(msg.text)
+            await msg.answer(f"❓ Вы хотите сменить имя с {cfg.variables.get('name')} на {msg.text}? ❓", reply_markup=check_menu)
+
+        elif user_states.get(user_id) == "udobr_set":
+            udr_name = str(msg.text)
+            await msg.answer(f"❓ Вы хотите изменить название удобрения с {cfg.variables.get('name_udobr')} на {msg.text}? ❓", reply_markup=check_menu)
+
+        elif user_states.get(user_id) == "set_date":
+            sort_name = str(msg.text)
+            await msg.answer(f"❓ Вы хотите установить дату на {msg.text}? ❓ ", reply_markup=check_menu)
+
         else:
             await msg.answer("⚠️ Используйте кнопки для навигации по меню ⚠️")
+
+    else:
+        await msg.answer(text="❗ Вы ничего не ввели ❗")

@@ -1,4 +1,3 @@
-import func
 import misc
 import handlers
 import asyncio

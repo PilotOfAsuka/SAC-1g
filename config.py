@@ -1,18 +1,18 @@
 from func import days_since_last_watering
 from modules.temp_module import get_sensor_data
+from modules.var_config import get_variables_from_json
 
 
+# BOT_TOKEN = "6540946269:AAFS9VxfD93UHtPHpFs5oNmENN34OCvNjzQ"  # testovyj
 BOT_TOKEN = "6901244838:AAH-UQ20wD719cFHfOFqR2_Wn2sdc5mIDUY"
 
-
-
-name_of_sort = "BUBBA KUSH"
-name_of_udobrenie = "None"
 date_of_seed = '2024-02-14'
 
 
 variables_file = "variables.json"
 user_states_file = 'user_states.json'
+
+variables = get_variables_from_json()
 
 start_text = ("🌿 Добро пожаловать в 'Систему автоматического контроля гровбоксом' САК-1г 🌿"
               "\n🤖 Это набросок приложения на основе телеграм бота 🤖"
@@ -20,7 +20,14 @@ start_text = ("🌿 Добро пожаловать в 'Систему авто�
               "\n🌱 Ну и удобный контроль 🌱")
 
 
-def update_info(day_w, light, wing, light_day, termo):
+def update_info():
+    day_w = variables.get('dates')
+    light = variables.get('light_on')
+    wing = variables.get('wing_on')
+    light_day = variables.get('sun_value')
+    termo = variables.get('termo_on')
+    name_of_sort = variables.get('name')
+    name_of_udobrenie = variables.get('name_udobr')
 
     current_temp, air_hud, voltage = get_sensor_data()
 
@@ -49,4 +56,3 @@ def update_info(day_w, light, wing, light_day, termo):
                 f"\n"
                 f"\n💧 Дней с последнего полива: {days_w}")
     return info_text
-

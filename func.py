@@ -18,9 +18,13 @@ def days_since_last_watering(last_watering_date):
     return days_difference
 
 
-def write_to_file(value, file_path="watering_history.txt"):
+def write_to_file(value, file_path="watering_history.txt", udobrenie=False):
     current_time = datetime.now().strftime('%Y-%m-%d %H:%M')
-    text_to_write = f"{current_time} :Полив на {value} литров.\n"
+
+    if udobrenie:
+        text_to_write = f"{current_time} :Удобрено на {value} литров.\n"
+    else:
+        text_to_write = f"{current_time} :Полив на {value} литров.\n"
 
     # Запись текста в файл
     with open(file_path, 'a') as file:
