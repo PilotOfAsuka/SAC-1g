@@ -1,9 +1,9 @@
 from func import days_since_last_watering
 from modules.temp_module import get_sensor_data
 from modules.var_config import get_variables_from_json
+from modules.numtotex import text_rost
 
-
-# BOT_TOKEN = "6540946269:AAFS9VxfD93UHtPHpFs5oNmENN34OCvNjzQ"  # testovyj
+#BOT_TOKEN = "6540946269:AAFS9VxfD93UHtPHpFs5oNmENN34OCvNjzQ"  # testovyj
 BOT_TOKEN = "6901244838:AAH-UQ20wD719cFHfOFqR2_Wn2sdc5mIDUY"
 
 date_of_seed = '2024-02-14'
@@ -50,7 +50,7 @@ def update_info():
                 f"\n"
                 f"\n📅 Дата посева: {date_of_seed}"
                 f"\n"
-                f"\n🌱 Дней роста: {days_since_last_watering('2024-02-15')}"
+                f"\n🌱Время роста:{text_rost(days_since_last_watering('2024-02-15'))}"
                 f"\n"
                 f"\n🏷 Название удобрения: {name_of_udobrenie}"
                 f"\n"
