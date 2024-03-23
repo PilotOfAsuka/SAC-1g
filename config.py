@@ -50,7 +50,7 @@ def update_info():
                 f"\n"
                 f"\n📅 Дата посева: {date_of_seed}"
                 f"\n"
-                f"\n🌱Время роста:{text_rost(days_since_last_watering('2024-02-15'))}"
+                f"\n🌱Время роста: {text_rost(days_since_last_watering('2024-02-15'))}"
                 f"\n"
                 f"\n🏷 Название удобрения: {name_of_udobrenie}"
                 f"\n"
