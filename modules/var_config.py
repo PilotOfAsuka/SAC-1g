@@ -10,26 +10,23 @@ def get_variables_from_json():
             return variables
     except FileNotFoundError:
         # Если файл не найден, начинаем с пустого словаря
-        variables = {'dates': "2024-02-17",
-                     'light_on': False,
-                     'wing_on': False,
-                     'sun_value': 0,
-                     'water_value': 0,
-                     'termo_on': False,
-                     'name': "BUBBA KUSH"}
+        variables = {"Booba_kush": {}, "Lizard_king": {}}
 
         print(f"variables.json not found, we make a new :)")
         return variables
 
 
-def watering(variables):
+def watering(variables, box):
     date = get_date()
-    variables["dates"] = date
+    variables[box]["dates"] = date
     save_in_json(variables, 'variables.json')
 
 
-def save_var(variables, var, value):
-    variables[var] = value
+def save_var(variables, var, value, box):
+    if box not in variables:
+        variables[box] = {}
+    variables[box][var] = value
+
     save_in_json(variables, 'variables.json')
 
 

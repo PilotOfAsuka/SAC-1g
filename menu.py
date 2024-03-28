@@ -4,15 +4,23 @@ import config as cfg
 import json
 import func
 
+
 # Загрузка данных из файла
-try:
-    with open(cfg.user_states_file, 'r') as file_user_states:
-        user_states = json.load(file_user_states)
-        print(f"{cfg.user_states_file} - loading successful")
-except FileNotFoundError:
-    # Если файл не найден, начинаем с пустого словаря
-    user_states = {}
-    print(f"{cfg.user_states_file} not found, we make a new :)")
+def load_json(name):
+    try:
+        with open(name, 'r') as file_user:
+            file = json.load(file_user)
+            print(f"{name} - loading successful")
+            return file
+    except FileNotFoundError:
+        # Если файл не найден, начинаем с пустого словаря
+        file = {}
+        print(f"{name} not found, we make a new :)")
+        return file
+
+
+user_states = load_json(cfg.user_states_file)
+user_box = load_json(cfg.user_box_file)
 
 
 def time_buttons():
@@ -36,6 +44,12 @@ def set_user_state(msg, state):
     func.save_in_json(user_states, cfg.user_states_file)
 
 
+def set_user_box(msg, box):
+    user_id = str(msg.from_user.id)
+    user_box[user_id] = box
+    func.save_in_json(user_box, cfg.user_box_file)
+
+
 def menu_generator(button_list, back_b=False):
     back_button = KeyboardButton(text="🔙 Назад")
     buttons = [[KeyboardButton(text=button)] for button in button_list]
@@ -46,6 +60,8 @@ def menu_generator(button_list, back_b=False):
 
 
 # Списки кнопок
+# список боксов
+box_list = ['Booba_kush', 'Lizard_king']
 
 main_menu_list = ["🌧️ Контроль полива 🌧️", "💡 Контроль освещения 💡", "💨 Контроль обдува 💨",
                   "🔥 Контроль обогрева 🔥", "ℹ️ Информация ℹ️", "⚙️Настройки⚙️"]
@@ -62,12 +78,14 @@ temp_menu_list = ["⚙️Включение/выключение обогрев�
 
 user_button_list = ["🔁 Обновить 🔁"]  # togo
 
-setting_button_list = ['👤 Изменить имя', '🌿 Изменить название удобрения', '📅 Установить дату посева']
+setting_button_list = ['👤 Изменить имя', '🌿 Изменить название удобрения', '📅 Установить дату посева', 'ВЫБРАТЬ БОКС']
 
 
 check_buttons_list = ["✅ Да", "❌ Нет"]
 
 # Создаем клавиатуры
+box_menu = menu_generator(box_list, back_b=True)
+
 main_menu_1 = menu_generator(main_menu_list)  # главное меню
 in_water_menu = menu_generator(water_menu_list, back_b=True)  # меню полива
 in_light_menu = menu_generator(light_menu_list, back_b=True)  # меню света
@@ -110,5 +128,6 @@ light_menu_actions = {
 settings_menu_actions = {
     setting_button_list[0]: ('name_set', "👤 Укажите новое имя", test_back()),
     setting_button_list[1]: ('udobr_set', "🌿 Укажите новое удобрение", test_back()),
-    setting_button_list[2]: ('set_date', "📅 Укажите новую дату посева", test_back())
+    setting_button_list[2]: ('set_date', "📅 Укажите новую дату посева в формате GGGG-MM-DD \nПример 2024-04-10", test_back()),
+    setting_button_list[3]: ('set_box', "Выберите бокс:", box_menu)
 }
