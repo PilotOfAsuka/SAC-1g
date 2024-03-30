@@ -1,5 +1,5 @@
 from func import days_since_last_watering
-#from modules.temp_module import get_sensor_data
+from modules.temp_module import get_sensor_data
 from modules.var_config import get_variables_from_json
 from modules.numtotex import text_rost
 from dotenv import load_dotenv
@@ -8,7 +8,7 @@ import os
 # Загрузить переменные окружения из файла .env
 load_dotenv()
 
-BOT_TOKEN = os.getenv("TEST_API")
+BOT_TOKEN = os.getenv("API")
 
 date_of_seed = '2024-02-14'
 date_of_grow = '2024-02-15'
@@ -21,9 +21,7 @@ user_box_file = 'user_box.json'
 variables = get_variables_from_json()
 
 start_text = ("🌿 Добро пожаловать в 'Систему автоматического контроля гровбоксом' САК-1г 🌿"
-              "\n🤖 Это набросок приложения на основе телеграм бота 🤖"
-              "\n🚨 Может уведомлять о критичных показателях пользователю 🚨"
-              "\n🌱 Ну и удобный контроль 🌱")
+              "\n🤖 Это набросок приложения на основе телеграм бота 🤖")
 
 
 def light_night(light_day):
@@ -43,7 +41,7 @@ def update_info(box):
     name_of_sort = variables.get(box).get('name')
     name_of_udobrenie = variables.get(box).get('name_udobr')
 
-    current_temp, air_hud, voltage = 1,2,3
+    current_temp, air_hud, voltage = get_sensor_data()
 
     days_w = days_since_last_watering(day_w)
     light_nigh = light_night(light_day)
