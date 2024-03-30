@@ -22,13 +22,16 @@ def watering(variables, box):
     save_in_json(variables, 'variables.json')
 
 
-def save_var(variables, var, value, box):
-    if box not in variables:
-        variables[box] = {}
-    variables[box][var] = value
+def save_var(json_var, var, value, box):
+    """Функция сохранения переменной в словаре JSON.
+    На вход принимает json_var - переменная в которой хранится словарь.
+    var - ссылка на переменную в словаре.
+    value - значение переменной в словаре.
+    box - ссылка на теплицу для которой будет сохраняться переменные .
+    """
 
-    save_in_json(variables, 'variables.json')
+    if box not in json_var:
+        json_var[box] = {}
+    json_var[box][var] = value
 
-
-
-
+    save_in_json(json_var, 'variables.json')

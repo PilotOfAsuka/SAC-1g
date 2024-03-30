@@ -1,10 +1,14 @@
 from func import days_since_last_watering
-from modules.temp_module import get_sensor_data
+#from modules.temp_module import get_sensor_data
 from modules.var_config import get_variables_from_json
 from modules.numtotex import text_rost
+from dotenv import load_dotenv
+import os
 
-#BOT_TOKEN = "6540946269:AAFS9VxfD93UHtPHpFs5oNmENN34OCvNjzQ"  # testovyj
-BOT_TOKEN = "6901244838:AAH-UQ20wD719cFHfOFqR2_Wn2sdc5mIDUY"
+# Загрузить переменные окружения из файла .env
+load_dotenv()
+
+BOT_TOKEN = os.getenv("TEST_API")
 
 date_of_seed = '2024-02-14'
 date_of_grow = '2024-02-15'
@@ -24,11 +28,10 @@ start_text = ("🌿 Добро пожаловать в 'Систему авто�
 
 def light_night(light_day):
     try:
-        light_night = 24 - light_day
-        return light_night
+        night = 24 - light_day
+        return night
     except TypeError:
         return None
-
 
 
 def update_info(box):
@@ -40,7 +43,7 @@ def update_info(box):
     name_of_sort = variables.get(box).get('name')
     name_of_udobrenie = variables.get(box).get('name_udobr')
 
-    current_temp, air_hud, voltage = get_sensor_data()
+    current_temp, air_hud, voltage = 1,2,3
 
     days_w = days_since_last_watering(day_w)
     light_nigh = light_night(light_day)

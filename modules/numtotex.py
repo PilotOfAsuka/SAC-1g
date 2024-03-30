@@ -18,4 +18,3 @@ def text_rost(days_in):
             return result
     except TypeError:
         return None
-    

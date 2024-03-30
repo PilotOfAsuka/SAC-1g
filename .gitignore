@@ -2,3 +2,4 @@
 user_states.json
 variables.json
 watering_history.txt
+.env

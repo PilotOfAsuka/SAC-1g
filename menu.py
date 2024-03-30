@@ -128,6 +128,7 @@ light_menu_actions = {
 settings_menu_actions = {
     setting_button_list[0]: ('name_set', "👤 Укажите новое имя", test_back()),
     setting_button_list[1]: ('udobr_set', "🌿 Укажите новое удобрение", test_back()),
-    setting_button_list[2]: ('set_date', "📅 Укажите новую дату посева в формате GGGG-MM-DD \nПример 2024-04-10", test_back()),
+    setting_button_list[2]: ('set_date', "📅 Укажите новую дату посева в формате GGGG-MM-DD \nПример 2024-04-10",
+                             test_back()),
     setting_button_list[3]: ('set_box', "Выберите бокс:", box_menu)
 }
