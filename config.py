@@ -1,5 +1,5 @@
 from func import days_since_last_watering
-#from modules.temp_module import get_sensor_data
+from modules.temp_module import get_sensor_data
 from modules.var_config import get_variables_from_json
 from modules.numtotex import text_rost
 from dotenv import load_dotenv
@@ -8,7 +8,7 @@ import os
 # Загрузить переменные окружения из файла .env
 load_dotenv()
 
-BOT_TOKEN = os.getenv("TEST_API")
+BOT_TOKEN = os.getenv("API")
 variables = get_variables_from_json()
 
 
@@ -30,7 +30,7 @@ def update_info(box) -> str:
         name_of_sort = variables.get(box).get('name')
         name_of_udobrenie = variables.get(box).get('name_udobr')
 
-        current_temp, air_hud, voltage = 1,2,3
+        current_temp, air_hud, voltage = get_sensor_data()
 
         days_w = days_since_last_watering(day_w)
         light_nigh = light_night(light_day)
