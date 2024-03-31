@@ -1,12 +1,13 @@
 from aiogram.types import (ReplyKeyboardMarkup,
                            KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton)
-import config as cfg
 import json
 import func
+from CONSTANTS import user_states_file, user_box_file
 
 
 # Загрузка данных из файла
 def load_json(name):
+    """Функция загрузки JSON в переменную"""
     try:
         with open(name, 'r') as file_user:
             file = json.load(file_user)
@@ -19,19 +20,21 @@ def load_json(name):
         return file
 
 
-user_states = load_json(cfg.user_states_file)
-user_box = load_json(cfg.user_box_file)
+user_states = load_json(user_states_file)
+user_box = load_json(user_box_file)
 
 
-def time_buttons():
-    back_button = KeyboardButton(text="Назад")
+def time_buttons() -> ReplyKeyboardMarkup:
+    """Функция возвращает клавиатуру 4 на 6 с цифрами от 1 до 24"""
+    back_button = KeyboardButton(text="🔙 Назад")
     time_buttons_set = [[KeyboardButton(text=str(i * 4 + j + 1)) for j in range(4)] for i in range(6)]
     time_buttons_set.append([back_button])
     time_button = ReplyKeyboardMarkup(resize_keyboard=True, keyboard=time_buttons_set)
     return time_button
 
 
-def test_back():
+def test_back() -> ReplyKeyboardMarkup:
+    """Тестовая кнопка назад, просто затычка для неготового меню"""
     back_button_test = [[KeyboardButton(text="🔙 Назад")]]
     t_b = ReplyKeyboardMarkup(resize_keyboard=True, keyboard=back_button_test)
     return t_b
@@ -39,18 +42,21 @@ def test_back():
 
 # изменение состояния user
 def set_user_state(msg, state):
+    """Функция установки 'user_state'"""
     user_id = str(msg.from_user.id)
     user_states[user_id] = state
-    func.save_in_json(user_states, cfg.user_states_file)
+    func.save_in_json(user_states, user_states_file)
 
 
 def set_user_box(msg, box):
+    """Функция установки текущего Бокса"""
     user_id = str(msg.from_user.id)
     user_box[user_id] = box
-    func.save_in_json(user_box, cfg.user_box_file)
+    func.save_in_json(user_box, user_box_file)
 
 
 def menu_generator(button_list, back_b=False):
+    """Функция для создания ReplyKeyboardMarkup из списка кнопок"""
     back_button = KeyboardButton(text="🔙 Назад")
     buttons = [[KeyboardButton(text=button)] for button in button_list]
     if back_b is not False:
@@ -60,8 +66,8 @@ def menu_generator(button_list, back_b=False):
 
 
 # Списки кнопок
-# список боксов
-box_list = ['Booba_kush', 'Lizard_king']
+
+box_list = ['Booba_kush', 'Lizard_king']  # Список боксов (Меню выбора боксов)
 
 main_menu_list = ["🌧️ Контроль полива 🌧️", "💡 Контроль освещения 💡", "💨 Контроль обдува 💨",
                   "🔥 Контроль обогрева 🔥", "ℹ️ Информация ℹ️", "⚙️Настройки⚙️"]
@@ -76,7 +82,7 @@ wing_menu_list = ["⚙️Включение/выключение обдува⚙
 
 temp_menu_list = ["⚙️Включение/выключение обогрева⚙️"]
 
-user_button_list = ["🔁 Обновить 🔁"]  # togo
+info_button_list = ["🔁 Обновить 🔁"]  # togo
 
 setting_button_list = ['👤 Изменить имя', '🌿 Изменить название удобрения', '📅 Установить дату посева', 'ВЫБРАТЬ БОКС']
 
@@ -95,7 +101,7 @@ in_wing_menu = menu_generator(wing_menu_list, back_b=True)  # меню обду�
 in_temp_menu = menu_generator(temp_menu_list, back_b=True)  # меню обогрева
 
 # Кнопки информационного табло
-info_buttons = [[InlineKeyboardButton(text=button, callback_data=button)] for button in user_button_list]
+info_buttons = [[InlineKeyboardButton(text=button, callback_data=button)] for button in info_button_list]
 info_menu = InlineKeyboardMarkup(inline_keyboard=info_buttons)
 # Кнопки индивидуальной настройки
 settings_menu = menu_generator(setting_button_list, back_b=True)

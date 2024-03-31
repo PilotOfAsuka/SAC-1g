@@ -1,4 +1,5 @@
-def text_rost(days_in):
+def text_rost(days_in) -> str:
+    """Принимает на вход число (дни) и возвращает отформатированные значение пройденных дней"""
     try:
         if days_in == 1:
             return "1 день"
@@ -17,4 +18,4 @@ def text_rost(days_in):
                 result += f"{days} день" if days == 1 else f"{days} дня"
             return result
     except TypeError:
-        return None
+        return "---"

@@ -1,25 +1,20 @@
 from func import *
+from CONSTANTS import variables_file
 
 
 def get_variables_from_json():
     # Загрузка данных из файла
     try:
-        with open('variables.json', 'r') as file_var:
+        with open(variables_file, 'r') as file_var:
             variables = json.load(file_var)
-            print(f"variables.json - loading successful")
+            print(f"{variables_file} - loading successful")
             return variables
     except FileNotFoundError:
         # Если файл не найден, начинаем с пустого словаря
         variables = {"Booba_kush": {}, "Lizard_king": {}}
 
-        print(f"variables.json not found, we make a new :)")
+        print(f"{variables_file} not found, we make a new :)")
         return variables
-
-
-def watering(variables, box):
-    date = get_date()
-    variables[box]["dates"] = date
-    save_in_json(variables, 'variables.json')
 
 
 def save_var(json_var, var, value, box):
@@ -34,4 +29,4 @@ def save_var(json_var, var, value, box):
         json_var[box] = {}
     json_var[box][var] = value
 
-    save_in_json(json_var, 'variables.json')
+    save_in_json(dictionary=json_var, file_dir=variables_file)
