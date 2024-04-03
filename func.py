@@ -38,7 +38,7 @@ def write_to_file(value, box, fertilizer=False):
 
 def load_from_file(box) -> str:
     """Читает файл истории для конкретного бокса"""
-    file_path = f"{box}_watering_history.txt"
+    file_path = f"history/{box}_watering_history.txt"
     try:
         with open(file_path, 'r') as file:
             content = file.read()

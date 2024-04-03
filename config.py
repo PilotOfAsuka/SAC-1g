@@ -1,5 +1,6 @@
 from func import days_since_last_watering
 from modules.temp_module import get_sensor_data
+from modules.dth22 import get_dht_data
 from modules.var_config import get_variables_from_json
 from modules.numtotex import text_rost
 from dotenv import load_dotenv
@@ -20,6 +21,17 @@ def light_night(light_day) -> int:
         return 0
 
 
+def get_data_sensor(sensor):
+    if sensor.lower() == 'Booba_kush':
+        t, h, = get_dht_data()
+        return t, h
+    elif sensor.lower() == 'Lizard_king':
+        t, h = get_sensor_data()
+        return t, h
+    else:
+        return 0, 0
+
+
 def update_info(box) -> str:
     try:
         day_w = variables.get(box).get('date_of_watering')
@@ -30,7 +42,7 @@ def update_info(box) -> str:
         name_of_sort = variables.get(box).get('name')
         name_of_udobrenie = variables.get(box).get('name_udobr')
 
-        current_temp, air_hud, voltage = get_sensor_data()
+        current_temp, air_hud = get_data_sensor(box)
 
         days_w = days_since_last_watering(day_w)
         light_nigh = light_night(light_day)
@@ -60,3 +72,5 @@ def update_info(box) -> str:
 
     except Exception as e:
         return f"Произошла ошибка {e}"
+
+
