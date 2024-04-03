@@ -22,10 +22,10 @@ def light_night(light_day) -> int:
 
 
 def get_data_sensor(sensor):
-    if sensor.lower() == 'Booba_kush':
+    if sensor.lower() == 'booba_kush':
         t, h, = get_dht_data()
         return t, h
-    elif sensor.lower() == 'Lizard_king':
+    elif sensor.lower() == 'lizard_king':
         t, h = get_sensor_data()
         return t, h
     else:
