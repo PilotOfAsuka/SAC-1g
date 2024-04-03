@@ -1,5 +1,5 @@
 from func import days_since_last_watering
-from modules.temp_module import get_sensor_data
+from modules.temp_module import get_mi_sensor_data
 from modules.dth22 import get_dht_data
 from modules.var_config import get_variables_from_json
 from modules.numtotex import text_rost
@@ -26,7 +26,7 @@ def get_data_sensor(sensor):
         t, h, = get_dht_data()
         return t, h
     elif sensor.lower() == 'lizard_king':
-        t, h = get_sensor_data()
+        t, h, voltage = get_mi_sensor_data()
         return t, h
     else:
         return 0, 0

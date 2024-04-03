@@ -30,7 +30,7 @@ device_address = "A4:C1:38:95:D6:32"
 notification_delegate = NotificationDelegate()
 
 
-def get_sensor_data(timeout=10.0):
+def get_mi_sensor_data(timeout=10.0):
     device = None
     try:
         device = Peripheral()
