@@ -4,7 +4,7 @@ import Adafruit_DHT as dht
 
 
 # Set DATA pin
-DHT = 4
+DHT = 7
 
 
 def get_dht_data():
