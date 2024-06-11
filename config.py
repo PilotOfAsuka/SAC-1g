@@ -8,7 +8,7 @@ import os
 # Загрузить переменные окружения из файла .env
 load_dotenv()
 
-BOT_TOKEN = os.getenv("TEST_API")
+BOT_TOKEN = os.getenv("API")
 variables = get_variables_from_json()
 
 
