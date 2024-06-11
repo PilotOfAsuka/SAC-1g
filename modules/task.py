@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 import misc
 import asyncio
-rom modules.temp_module import get_mi_sensor_data
+from modules.temp_module import get_mi_sensor_data
 
 # Функция, которая отправляет сообщение в N часов каждый день
 async def send_message_at(hour, minutes, text, chat_id):
