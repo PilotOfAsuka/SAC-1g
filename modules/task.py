@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 import misc
 import asyncio
-from modules.temp_module import get_mi_sensor_data
+rom modules.temp_module import get_mi_sensor_data
 
 # Функция, которая отправляет сообщение в N часов каждый день
 async def send_message_at(hour, minutes, text, chat_id):
@@ -27,4 +27,12 @@ async def send_message_fumc(chat_id):
     t, h, voltage = get_mi_sensor_data()
     await misc.bot.send_message(chat_id=chat_id,
                                 text=f"Температура: {t}.C,  Влажность: {h}")
+    while True:
+        # Ожидаем до момента отправки сообщения
+        await asyncio.sleep(60)
+
+        # Отправляем сообщение
+        await misc.bot.send_message(chat_id=chat_id,
+                                    text=f"Температура: {t}.C, Влажность: {h}")
+
     pass
