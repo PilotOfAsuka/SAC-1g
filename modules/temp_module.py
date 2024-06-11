@@ -25,7 +25,8 @@ class NotificationDelegate(DefaultDelegate):
         self.battery_level = int.from_bytes(data[3:], byteorder='little', signed=False) / 1000
 
 
-device_address = "A4:C1:38:95:D6:32"
+Room_device_address = "A4:C1:38:95:D6:32"
+Box_device_addres = "A4:C1:38:25:BB:92"
 
 notification_delegate = NotificationDelegate()
 
@@ -35,7 +36,7 @@ def get_mi_sensor_data(timeout=10.0):
     try:
         device = Peripheral()
         if device.addrType == None:
-            device.connect(device_address)
+            device.connect(Box_device_addres)
         device.setDelegate(notification_delegate)
         if device.waitForNotifications(timeout):
             return notification_delegate.temperature, notification_delegate.humidity, notification_delegate.battery_level

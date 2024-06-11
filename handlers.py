@@ -1,4 +1,6 @@
 from aiogram import F
+
+import func
 from config import update_info, variables
 from misc import dp, bot
 from aiogram.types import (Message, CallbackQuery)
@@ -227,6 +229,21 @@ async def water_set_menu(msg: Message):
         elif msg.text == check_buttons_list[1]:
             await msg.answer("❌ Вы отказались! ❌\nВозвращаем вас в главное меню", reply_markup=main_menu_1)
             set_user_state(msg, "idle")
+
+    elif user_states.get(user_id) == "harvest":
+        if msg.text == check_buttons_list[0]:
+            var_config.save_var(json_var=variables, var="harvest", value=True, box=user_box.get(user_id))
+            var_config.save_var(json_var=variables, var=func.get_date(), value=True, box=user_box.get(user_id))
+            await msg.answer(text="Успешно установлен статус Харвест!.\nВозвращаем вас в главное меню.",
+                             reply_markup=main_menu_1)
+            pass
+        elif msg.text == check_buttons_list[1]:
+            await msg.answer(text="Вы отказались!.\nВозвращаем вас в главное меню.",
+                             reply_markup=main_menu_1)
+            set_user_state(msg, "idle")
+            pass
+
+        pass
 
     else:
         await msg.answer("⚠️ Произошла ошибка в обработке запросов. 🔄\nВозврат в главное меню",

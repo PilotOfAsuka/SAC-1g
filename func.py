@@ -55,3 +55,10 @@ def get_date():
     """Возвращает дату в формате ГГГГ-ММ-ДД"""
     date = datetime.now().strftime('%Y-%m-%d')
     return date
+
+def get_time_text(date=False):
+    current_time = datetime.now()
+    if date:
+        return current_time.strftime("%Y-%m-%d %H:%M")
+    else:
+        return current_time.strftime("%H:%M")
