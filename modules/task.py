@@ -29,7 +29,7 @@ async def send_message_fumc(chat_id):
                                 text=f"Температура: {t}.C,  Влажность: {h}")
     while True:
         # Ожидаем до момента отправки сообщения
-        await asyncio.sleep(60)
+        await asyncio.sleep((60*60) * 2)
 
         # Отправляем сообщение
         await misc.bot.send_message(chat_id=chat_id,
