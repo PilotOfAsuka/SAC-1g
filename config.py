@@ -28,7 +28,10 @@ def get_data_sensor(sensor):
     elif sensor.lower() == 'lizard_king':
         t, h, voltage = get_mi_sensor_data(Box_device_address)
         t2, h2, voltage2 = get_mi_sensor_data(Room_device_address)
-        return t, h, t2, h2
+        if t and h and t2 and h2:
+            return t, h, t2, h2
+        else:
+            return 0, 0, 0, 0
     else:
         return 0, 0
 
