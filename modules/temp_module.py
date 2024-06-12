@@ -26,17 +26,17 @@ class NotificationDelegate(DefaultDelegate):
 
 
 Room_device_address = "A4:C1:38:95:D6:32"
-Box_device_addres = "A4:C1:38:25:BB:92"
+Box_device_address = "A4:C1:38:25:BB:92"
 
 notification_delegate = NotificationDelegate()
 
 
-def get_mi_sensor_data(timeout=10.0):
+def get_mi_sensor_data(address_mi, timeout=10.0):
     device = None
     try:
         device = Peripheral()
         if device.addrType == None:
-            device.connect(Box_device_addres)
+            device.connect(address_mi)
         device.setDelegate(notification_delegate)
         if device.waitForNotifications(timeout):
             return notification_delegate.temperature, notification_delegate.humidity, notification_delegate.battery_level

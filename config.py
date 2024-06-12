@@ -4,6 +4,7 @@ from modules.var_config import get_variables_from_json
 from modules.numtotex import text_rost
 from dotenv import load_dotenv
 import os
+from CONSTANTS import Box_device_address, Room_device_address
 
 # Загрузить переменные окружения из файла .env
 load_dotenv()
@@ -25,8 +26,9 @@ def get_data_sensor(sensor):
         t, h, = 0, 0
         return t, h
     elif sensor.lower() == 'lizard_king':
-        t, h, voltage = get_mi_sensor_data()
-        return t, h
+        t, h, voltage = get_mi_sensor_data(Box_device_address)
+        t2, h2, voltage2 = get_mi_sensor_data(Room_device_address)
+        return t, h, t2, h2
     else:
         return 0, 0
 
@@ -41,21 +43,22 @@ def update_info(box) -> str:
         name_of_sort = variables.get(box).get('name')
         name_of_udobrenie = variables.get(box).get('name_udobr')
 
-        current_temp, air_hud = get_data_sensor(box)
+        current_temp, air_hud, t2, h2 = get_data_sensor(box)
 
         days_w = days_since_last_watering(day_w)
         light_nigh = light_night(light_day)
 
         info_text = get_info_text(box=box, name_of_sort=name_of_sort, current_temp=current_temp,
                                   air_hud=air_hud, termo=termo, light=light, light_day=light_day, light_nigh=light_nigh,
-                                  wing=wing, name_of_udobrenie=name_of_udobrenie, days_w=days_w)
+                                  wing=wing, name_of_udobrenie=name_of_udobrenie, days_w=days_w, t2=t2, h2=h2)
         return info_text
+
 
     except Exception as e:
         return f"Произошла ошибка {e}"
 
 
-def get_info_text(box, name_of_sort, current_temp, air_hud, termo, light, light_day, light_nigh, wing, name_of_udobrenie, days_w) -> str:
+def get_info_text(box, name_of_sort, current_temp, air_hud, termo, light, light_day, light_nigh, wing, name_of_udobrenie, days_w, t2, h2) -> str:
     if box.lower() == 'booba_kush':
         harvest_day = variables.get(box).get("harvest_day")
         text_of_info = (f"\n🏷 Название сорта: {name_of_sort}"
@@ -85,8 +88,10 @@ def get_info_text(box, name_of_sort, current_temp, air_hud, termo, light, light_
         text_of_info = (f"\n🏷 Название сорта: {name_of_sort}"
                         f"\n"
                         f"\n🌡️ Температура в парнике: {current_temp}°C"
+                        f"\n🌡️ Температура второй точки: {t2}°C"
                         f"\n"
                         f"\n💧 Влажность в парнике: {air_hud}%"
+                        f"\n💧 Влажность второй точки: {h2}%"
                         f"\n"
                         f"\n🔥 Обогрев: {'Включен' if termo else 'Выключен'}"
                         f"\n"
