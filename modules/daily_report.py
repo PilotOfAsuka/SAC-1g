@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from aiogram import types
 import misc
 from modules.temp_module import get_mi_sensor_data
+from CONSTANTS import Box_device_address, Room_device_address
 
 # Глобальные переменные для хранения данных
 daily_data = []
@@ -12,8 +13,8 @@ daily_data = []
 REPORTS_DIR = "daily_buffer"
 
 async def send_message_func(chat_id):
-    t, h, voltage = get_mi_sensor_data("Box_device_address")
-    t2, h2, voltage2 = get_mi_sensor_data("Room_device_address")
+    t, h, voltage = get_mi_sensor_data(Box_device_address)
+    t2, h2, voltage2 = get_mi_sensor_data(Room_device_address)
     daily_data.append((datetime.now(), t, h, t2, h2))  # Сохранение данных с меткой времени
     await misc.bot.send_message(chat_id=chat_id,
                            text=f"Температура: {t}°C, Влажность: {h}%\nТемпература2: {t2}°C, Влажность2: {h2}%")
