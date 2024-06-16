@@ -67,8 +67,13 @@ async def generate_daily_report(chat_id):
 async def daily_report_task():
     while True:
         now = datetime.now()
-        next_run = (now + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
-        await asyncio.sleep((next_run - now).total_seconds())
+        target_time = now.replace(hour=22, minute=0, second=0, microsecond=0)
+
+        if now >= target_time:
+            # Если текущее время уже прошло 22:00, то следующая цель - 22:00 следующего дня
+            target_time += timedelta(days=1)
+
+        await asyncio.sleep((target_time - now).total_seconds())
         await generate_daily_report(chat_id="5848061277")
 
 
