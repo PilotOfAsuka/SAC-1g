@@ -24,7 +24,8 @@ async def send_message_at(hour, minutes, text, chat_id):
         await misc.bot.send_message(chat_id=chat_id,
                                     text=text)
 
-async def send_message_fumc(chat_id):
+
+async def send_message_func(chat_id):
     t, h, voltage = get_mi_sensor_data(Box_device_address)
     t2, h2, voltage2 = get_mi_sensor_data(Room_device_address)
     await misc.bot.send_message(chat_id=chat_id,

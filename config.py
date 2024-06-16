@@ -24,7 +24,7 @@ def light_night(light_day) -> int:
 def get_data_sensor(sensor):
     if sensor.lower() == 'booba_kush':
         t, h, = 0, 0
-        return t, h
+        return t, h, 0, 0
     elif sensor.lower() == 'lizard_king':
         t, h, voltage = get_mi_sensor_data(Box_device_address)
         t2, h2, voltage2 = get_mi_sensor_data(Room_device_address)

@@ -2,6 +2,7 @@ from bluepy.btle import Peripheral, DefaultDelegate, BTLEDisconnectError
 import subprocess
 
 # Данный файл-модуль является костылем для получения данных с датчика Xiaomi Mijia (LYWSD03MMC)
+# gatttool -b A4:C1:38:95:D6:32 --char-write-req -a 0x0038 -n 0100
 # char-write-req 0x0038 0100 для включения нотификации
 # В будущем переход на более надежный DHT22
 
