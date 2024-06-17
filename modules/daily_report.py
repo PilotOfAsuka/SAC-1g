@@ -15,9 +15,10 @@ REPORTS_DIR = "daily_buffer"
 async def send_message_func(chat_id):
     t, h, voltage = get_mi_sensor_data(Box_device_address)
     t2, h2, voltage2 = get_mi_sensor_data(Room_device_address)
+    mid_t = (t+t2)/2
     daily_data.append((datetime.now(), t, h, t2, h2))  # Сохранение данных с меткой времени
     await misc.bot.send_message(chat_id=chat_id,
-                           text=f"Температура: {t}°C, Влажность: {h}%\nТемпература2: {t2}°C, Влажность2: {h2}%")
+                           text=f"Температура: {t}°C, Влажность: {h}%\nТемпература2: {t2}°C, Влажность2: {h2}%\nСредняя темп.: {mid_t}")
 
 
 def create_plot():
@@ -56,7 +57,7 @@ async def generate_daily_report(chat_id):
     # Создание графика
     plot_filename = create_plot()
 
-    # Отправка таблицы
+    # Отправка ежедневного графика
     await misc.bot.send_photo(chat_id=chat_id, photo=types.FSInputFile(plot_filename))
 
     # Сброс данных
