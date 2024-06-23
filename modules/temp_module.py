@@ -43,9 +43,9 @@ def get_mi_sensor_data(address_mi, timeout=10.0):
             return notification_delegate.temperature, notification_delegate.humidity, notification_delegate.battery_level
 
     except BTLEDisconnectError as e:
-        temperature = "🛑"
-        humidity = "🛑"
-        battery_level = "🛑"
+        temperature = 0
+        humidity = 0
+        battery_level = 0
         restart_bluetooth_service()
         return temperature, humidity, battery_level
 
