@@ -26,7 +26,7 @@ async def generate_daily_report(chat_id):
 
     # Проверяем, что список не пустой
     if len(cleaned_temperatures) == 0:
-        cleaned_temperatures = 0
+        cleaned_temperatures = [1, 1]
 
     # Вычисляем среднее значение
     average_temperature = sum(cleaned_temperatures) / len(cleaned_temperatures)
