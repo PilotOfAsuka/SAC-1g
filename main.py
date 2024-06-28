@@ -26,7 +26,7 @@ if __name__ == "__main__":
     message_tasks = []
 
     try:
-        loop.run_until_complete(asyncio.gather(startup_task(), run_task(interval=1, action=send_message_func(ls)), daily_report_task()))
+        loop.run_until_complete(asyncio.gather(startup_task(), run_task(interval=1, action=send_message_func, chat_id=ls), daily_report_task()))
 
     finally:
         loop.close()

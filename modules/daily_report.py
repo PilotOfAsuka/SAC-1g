@@ -50,12 +50,12 @@ async def daily_report_task():
         await generate_daily_report(chat_id="5848061277")
 
 
-async def run_task(interval, unit='hours', action=None):
+async def run_task(interval, unit='hours', action=None, *args, **kwargs):
     if action is None:
         raise ValueError("Необходимо передать функцию для выполнения.")
 
     while True:
-        await action()  # Выполняем переданную функцию
+        await action(*args, **kwargs)  # Выполняем переданную функцию
         now = datetime.now()  # Получаем текущее время
 
         # Определяем следующий запуск в зависимости от указанного интервала и единицы времени
