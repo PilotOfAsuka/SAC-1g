@@ -50,7 +50,7 @@ async def daily_report_task():
         await generate_daily_report(chat_id="5848061277")
 
 
-def run_task(interval, unit='hours', action=None):
+async def run_task(interval, unit='hours', action=None):
     if action is None:
         raise ValueError("Необходимо передать функцию для выполнения.")
 
@@ -70,5 +70,5 @@ def run_task(interval, unit='hours', action=None):
         next_run = next_run.replace(microsecond=0)  # Обнуляем миллисекунды для точности
         sleep_duration = (next_run - now).total_seconds()
 
-        asyncio.sleep(sleep_duration)  # Засыпаем до следующего запуска
+        await asyncio.sleep(sleep_duration)  # Засыпаем до следующего запуска
         action()  # Выполняем переданную функцию
