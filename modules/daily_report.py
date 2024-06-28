@@ -55,6 +55,7 @@ async def run_task(interval, unit='hours', action=None):
         raise ValueError("Необходимо передать функцию для выполнения.")
 
     while True:
+        action()  # Выполняем переданную функцию
         now = datetime.now()  # Получаем текущее время
 
         # Определяем следующий запуск в зависимости от указанного интервала и единицы времени
@@ -71,4 +72,4 @@ async def run_task(interval, unit='hours', action=None):
         sleep_duration = (next_run - now).total_seconds()
 
         await asyncio.sleep(sleep_duration)  # Засыпаем до следующего запуска
-        action()  # Выполняем переданную функцию
+
