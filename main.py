@@ -1,7 +1,7 @@
 import misc
 import handlers
 import asyncio
-from modules.daily_report import send_message_func, daily_report_task
+from modules.daily_report import send_message_func, daily_report_task, run_task
 from func import get_time_text
 
 handlers = handlers
@@ -11,14 +11,6 @@ ls = "5848061277"
 async def on_startup():
     await misc.bot.send_message(chat_id=ls, text=f"{get_time_text()} - Сервер упал, но снова поднялся")
 
-
-async def send_mess():
-    global message_tasks
-
-    while True:
-        # Ждем один час перед повторным обновлением задач
-        await send_message_func(ls)
-        await asyncio.sleep(60 * 60)
 
 
 async def startup_task():
@@ -34,7 +26,7 @@ if __name__ == "__main__":
     message_tasks = []
 
     try:
-        loop.run_until_complete(asyncio.gather(startup_task(), send_mess(), daily_report_task()))
+        loop.run_until_complete(asyncio.gather(startup_task(), run_task(interval=1, action=send_message_func(ls)), daily_report_task()))
 
     finally:
         loop.close()
