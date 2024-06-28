@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 import misc
 from modules.temp_module import get_mi_sensor_data
 from CONSTANTS import Box_device_address, Room_device_address
-import time
+
 
 # Глобальные переменные для хранения данных
 daily_data_temp= []
@@ -70,5 +70,5 @@ def run_task(interval, unit='hours', action=None):
         next_run = next_run.replace(microsecond=0)  # Обнуляем миллисекунды для точности
         sleep_duration = (next_run - now).total_seconds()
 
-        time.sleep(sleep_duration)  # Засыпаем до следующего запуска
+        asyncio.sleep(sleep_duration)  # Засыпаем до следующего запуска
         action()  # Выполняем переданную функцию
